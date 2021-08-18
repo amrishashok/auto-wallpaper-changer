@@ -1,0 +1,16 @@
+{
+  "name": "auto-wallpaper-changer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Amrish ashok",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "dialog": "^0.3.1",
+    "wallpaper": "^5.0.1"
+  }
+}
