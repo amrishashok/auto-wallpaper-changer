@@ -9,5 +9,5 @@ It will set wallpaper automatically every 3 hours and it will show a alert dialo
    First we need to get into the folder of the project and execute the code
 
 ```bash
-0 */2 * * * cd /home/amrish/Projects/auto-wallpaper-changer && /usr/bin/node index.js
+0 */3 * * * cd /home/amrish/Projects/auto-wallpaper-changer && /usr/bin/node index.js
 ```
