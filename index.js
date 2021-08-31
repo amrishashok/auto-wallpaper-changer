@@ -4,24 +4,43 @@ const path = require('path');
 const os = require('os');
 const fs = require('fs');
 const dialog = require('dialog');
+const cron = require('node-schedule');
+const intervalInHour = 1;
 
 async function getBackground() {
-  const response = await axios.get('https://picsum.photos/1920/1080', 
+  try {
+    const response = await axios.get('https://picsum.photos/1920/1080', 
     { responseType: 'arraybuffer' }
-  );
-  setAsBackground(response.data);
+    );
+    setAsBackground(response.data);
+  } catch (error) {
+    setErrorLog(String(error));
+  }
 }
 
-function setAsBackground(base64Image){
+async function setAsBackground(base64Image){
   const now = (new Date()).getTime();
   let picturePath = path.join(os.homedir(), "/Pictures/Wallpapers", `wallpaper-${now}.jpg`);
   picturePath = path.normalize(picturePath);
-  fs.writeFile(picturePath, base64Image, 'base64', (err) => {
-    wallpaper.set(picturePath, {scale: "stretch"})
-    .then(() => {
+  fs.writeFile(picturePath, base64Image, 'base64', async (err) => {
+    if (err) {
+      setErrorLog(err);
+      return err;
+    }
+    try {
+      await wallpaper.set(picturePath, {scale: "stretch"})
       dialog.info('Wallpaper changed, check it out!', 'Wallpaper');
-    });
+    } catch (error) {
+      setErrorLog(error);
+    }
   });
 }
 
-getBackground();
+const setErrorLog = (text) => {
+  const errorFilePath = path.join(os.homedir(), '/Projects/auto-wallpaper-changer', 'error.log')
+  fs.appendFile(errorFilePath, `\n${new Date()} ${text}`, () => {});
+}
+
+cron.scheduleJob(`0 */${intervalInHour} * * *`, function() {
+  getBackground();
+});
